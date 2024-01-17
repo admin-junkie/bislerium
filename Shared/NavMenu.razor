@@ -1,0 +1,45 @@
+﻿@page "/your-page"
+
+@inject BisleriumCafe.Data.Services.AuthService AuthService
+
+<!-- DrawerHeader: Displaying the Bislerium Cafe logo and name -->
+<MudDrawerHeader Class="my-4 custom-drawer-header" Style="background-image: url('/images/image1.png'); background-size: cover; background-repeat: no-repeat;">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+        <!-- Icon representing the cafe -->
+        <MudIcon Icon="@Icons.Material.Filled.Storefront" Color="Color.Primary" Size="Size.Large" />
+        <!-- Text label for the cafe name with a bold and stylish font -->
+        <MudText Color="Color.Primary" Typo="Typo.h5" Style="font-weight: bold; font-family: 'Times New Roman', serif; font-size: 24px;">Bislerium Cafe</MudText>
+    </MudStack>
+</MudDrawerHeader>
+
+<!-- NavMenu: Navigation links with a background image -->
+<MudNavMenu Bordered="true" Color="Color.Primary" Margin="Margin.Normal" Style="background-image: url('/images/image1.png'); background-size: cover; background-repeat: no-repeat; height: calc(100vh - 64px); overflow-y: auto;">
+    <!-- Navigation link to the Dashboard (visible to admins) -->
+    @if (AuthService.IsUserAdmin())
+    {
+        <MudNavLink Href="@Dashboard.Route" Icon="@Icons.Material.Filled.Analytics" Color="Color.Blue">Analytics</MudNavLink>
+    }
+    <!-- Navigation link to the Products page -->
+    <MudNavLink Href="@Inventory.Route" Icon="@Icons.Material.Filled.ShoppingCart" Color="Color.Blue">Products</MudNavLink>
+    <!-- Navigation link to the Activity Logs page -->
+    <MudNavLink Href="@ActivityLogs.Route" Icon="@Icons.Material.Filled.History" Color="Color.Blue">Activity Logs</MudNavLink>
+
+    <!-- Additional admin-specific links -->
+    @if (AuthService.IsUserAdmin())
+    {
+        <MudNavLink Href="@Users.Route" Icon="@Icons.Material.Filled.Group" Color="Color.Blue">User Management</MudNavLink>
+        <MudNavLink Href="@NewTransactions.Route" Icon="@Icons.Material.Filled.AttachMoney" Color="Color.Blue">Transactions</MudNavLink>
+        <MudNavLink Href="@Pos.Route" Icon="@Icons.Material.Filled.PointOfSale" Color="Color.Blue">POS</MudNavLink>
+        <MudNavLink Href="@Memberships.Route" Icon="@Icons.Material.Filled.CardMembership" Color="Color.Blue">Membership Plans</MudNavLink>
+    }
+    <!-- Navigation link to Change Password page -->
+    <MudNavLink Href="@ChangePassword.Route" Icon="@Icons.Material.Filled.Lock" Color="Color.Blue">Security Settings</MudNavLink>
+</MudNavMenu>
+
+<style>
+    /* Custom styles for the drawer header */
+    .custom-drawer-header {
+        height: 120px; /* Increased height for better visibility */
+        line-height: 120px; /* Center content vertically */
+    }
+</style>

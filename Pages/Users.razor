@@ -1,0 +1,77 @@
+﻿@page "/users"
+@layout MainLayout
+
+@inject BisleriumCafe.Data.Repositories.Repository<User> UserRepository;
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<!-- MudTable for displaying user data -->
+<MudTable Elevation="0"
+          Items="@Elements"
+          FixedHeader="@Fixed_header"
+          FixedFooter="@Fixed_footer"
+          Height="@(Fixed_header || Fixed_footer ? "calc(100vh - 64px - 64px - 64px)" : "")"
+          Dense="@Dense"
+          Hover="@Hover"
+          ReadOnly="@ReadOnly"
+          CanCancelEdit="@VanCancelEdit"
+          Filter="new Func<User,bool>(FilterFunc)"
+          SortLabel="Sort By"
+          RowsPerPage="25"
+          CommitEditTooltip="Commit Edit"
+          HorizontalScrollbar="true"
+          OnCommitEditClick="@(() => Snackbar.Add("User Updated!", Severity.Success))"
+          RowEditPreview="BackupItem"
+          RowEditCancel="ResetItemToOriginalValues"
+          IsEditRowSwitchingBlocked="@BlockSwitch"
+          ApplyButtonPosition="@ApplyButtonPosition"
+          EditButtonPosition="@EditButtonPosition"
+          EditTrigger="@EditTrigger">
+
+    <!-- Toolbar Content Section -->
+    <ToolBarContent>
+        <!-- Add User button -->
+        <MudFab class="me-4" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Label="Add User" DisableElevation="true" OnClick="AddDialog" />
+
+        <!-- Import and Export buttons -->
+        <MudStack Row="true">
+            <ImportButton T="User" ChangeParentState="Reload" />
+            <ExportButton T="User" />
+        </MudStack>
+
+        <!-- Search Input -->
+        <MudSpacer />
+        <MudTextField @bind-Value="SearchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Clearable="true"></MudTextField>
+    </ToolBarContent>
+
+    <!-- Header Content Section -->
+    <HeaderContent>
+        <MudTh Style="white-space: nowrap;"><MudTableSortLabel SortBy="new Func<User, object>(x=>x.Id)">ID</MudTableSortLabel></MudTh>
+        <MudTh Style="white-space: nowrap;"><MudTableSortLabel SortBy="new Func<User, object>(x=>x.UserName)">User Name</MudTableSortLabel></MudTh>
+        <MudTh Style="white-space: nowrap;"><MudTableSortLabel SortBy="new Func<User, object>(x=>x.Email)">Email</MudTableSortLabel></MudTh>
+        <!-- Add more headers as needed -->
+    </HeaderContent>
+
+    <!-- Row Template Section -->
+    <RowTemplate>
+        <MudTd Class="row-cols-md-auto" DataLabel="ID"><MudChip>@context.Id</MudChip></MudTd>
+        <MudTd DataLabel="User Name">@context.UserName</MudTd>
+        <MudTd DataLabel="Email">@context.Email</MudTd>
+        <!-- Add more rows as needed -->
+    </RowTemplate>
+
+    <!-- Row Editing Template Section -->
+    <RowEditingTemplate>
+        <MudTd DataLabel="ID"><MudChip>@context.Id</MudChip></MudTd>
+        <MudTd DataLabel="User Name">@context.UserName</MudTd>
+        <MudTd DataLabel="Email">
+            <MudTextField @bind-Value="@context.Email" Required />
+         </MudTd>
+         <!-- Add more editing rows as needed -->
+     </RowEditingTemplate>
+
+     <!-- Pager Content Section -->
+     <PagerContent>
+         <MudTablePager PageSizeOptions="new int[] { 25, 50, 75, 100}" />
+     </PagerContent>
+ </MudTable>
